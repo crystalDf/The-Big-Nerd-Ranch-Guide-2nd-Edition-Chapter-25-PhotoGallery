@@ -2,6 +2,7 @@ package com.star.photogallery;
 
 
 import android.net.Uri;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FlickrFetchr {
@@ -75,11 +77,11 @@ public class FlickrFetchr {
         return new String(getUrlBytes(urlSpec));
     }
 
-//    public List<GalleryItem> fetchItems() {
-//
-//        List<GalleryItem> items = new ArrayList<>();
-//
-//        try {
+    public List<GalleryItem> downloadGalleryItems(String url) {
+
+        List<GalleryItem> items = new ArrayList<>();
+
+        try {
 //            String url = Uri.parse("https://api.flickr.com/services/rest/")
 //                    .buildUpon()
 //                    .appendQueryParameter(METHOD_KEY, METHOD_VALUE)
@@ -88,19 +90,19 @@ public class FlickrFetchr {
 //                    .appendQueryParameter(NO_JSON_CALL_BACK_KEY, NO_JSON_CALL_BACK_VALUE)
 //                    .appendQueryParameter(EXTRAS_KEY, EXTRAS_VALUE)
 //                    .build().toString();
-//
-//            String jsonString = getUrlString(url);
-//            Log.i(TAG, "Received JSON: " + jsonString);
-//            JSONObject jsonBody = new JSONObject(jsonString);
-//            parseItems(items, jsonBody);
-//        } catch (IOException e) {
-//            Log.e(TAG, "Failed to fetch items", e);
-//        } catch (JSONException e) {
-//            Log.e(TAG, "Failed to parse JSON", e);
-//        }
-//
-//        return items;
-//    }
+
+            String jsonString = getUrlString(url);
+            Log.i(TAG, "Received JSON: " + jsonString);
+            JSONObject jsonBody = new JSONObject(jsonString);
+            parseItems(items, jsonBody);
+        } catch (IOException e) {
+            Log.e(TAG, "Failed to fetch items", e);
+        } catch (JSONException e) {
+            Log.e(TAG, "Failed to parse JSON", e);
+        }
+
+        return items;
+    }
 
     private void parseItems(List<GalleryItem> items, JSONObject jsonBody) throws JSONException {
         JSONObject photosJSONObject = jsonBody.getJSONObject("photos");
