@@ -35,6 +35,7 @@ public class FlickrFetchr {
     private static final String NO_JSON_CALL_BACK_VALUE = "1";
     private static final String EXTRAS_KEY = "extras";
     private static final String EXTRAS_VALUE = "url_s";
+    private static final String TEXT = "text";
 
     private static final Uri ENDPOINT = Uri
             .parse("https://api.flickr.com/services/rest/")
@@ -102,6 +103,16 @@ public class FlickrFetchr {
         }
 
         return items;
+    }
+
+    private String buildUrl(String method, String query) {
+        Uri.Builder uriBuilder = ENDPOINT.buildUpon().appendQueryParameter(METHOD_KEY, method);
+
+        if (method.equals(SEARCH_METHOD)) {
+            uriBuilder.appendQueryParameter(TEXT, query);
+        }
+
+        return uriBuilder.build().toString();
     }
 
     private void parseItems(List<GalleryItem> items, JSONObject jsonBody) throws JSONException {
