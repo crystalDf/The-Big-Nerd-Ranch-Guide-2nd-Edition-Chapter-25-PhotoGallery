@@ -44,7 +44,7 @@ public class PhotoGalleryFragment extends Fragment {
         setRetainInstance(true);
         setHasOptionsMenu(true);
 
-        new FetchItemsTask().execute();
+        updateItems();
 
         Handler responseHandler = new Handler();
 
