@@ -101,7 +101,7 @@ public class PhotoGalleryFragment extends Fragment {
 
         inflater.inflate(R.menu.fragment_photo_gallery, menu);
 
-        MenuItem searchItem = menu.findItem(R.id.menu_item_search);
+        final MenuItem searchItem = menu.findItem(R.id.menu_item_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -111,6 +111,8 @@ public class PhotoGalleryFragment extends Fragment {
 
                 QueryPreferences.setStoredQuery(getActivity(), query);
                 updateItems();
+
+                searchView.onActionViewCollapsed();
 
                 return true;
             }
