@@ -22,7 +22,6 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PhotoGalleryFragment extends Fragment {
@@ -34,7 +33,7 @@ public class PhotoGalleryFragment extends Fragment {
 
     private RecyclerView mPhotoRecyclerView;
     private GridLayoutManager mGridLayoutManager;
-    private List<GalleryItem> mGalleryItems = new ArrayList<>();
+    private List<GalleryItem> mGalleryItems;
 
     private int mCurrentPage;
     private int mFetchedPage;
@@ -162,7 +161,11 @@ public class PhotoGalleryFragment extends Fragment {
         mFetchedPage = 0;
         mCurrentPosition = 0;
 
-        mGalleryItems.clear();
+        if (mGalleryItems != null) {
+            mGalleryItems.clear();
+            mGalleryItems = null;
+        }
+
     }
 
     private void setupAdapter() {
@@ -245,8 +248,12 @@ public class PhotoGalleryFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<GalleryItem> items) {
-            if (items != null) {
-                mGalleryItems.addAll(items);
+            if (mGalleryItems == null) {
+                mGalleryItems = items;
+            } else {
+                if (items != null) {
+                    mGalleryItems.addAll(items);
+                }
             }
 
             mFetchedPage++;
