@@ -35,6 +35,8 @@ public class PhotoGalleryFragment extends Fragment {
     private GridLayoutManager mGridLayoutManager;
     private List<GalleryItem> mGalleryItems;
 
+    private SearchView mSearchView;
+
     private int mCurrentPage;
     private int mFetchedPage;
     private int mCurrentPosition;
@@ -102,9 +104,9 @@ public class PhotoGalleryFragment extends Fragment {
         inflater.inflate(R.menu.fragment_photo_gallery, menu);
 
         final MenuItem searchItem = menu.findItem(R.id.menu_item_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Log.d(TAG, "QueryTextSubmit: " + query);
@@ -112,7 +114,7 @@ public class PhotoGalleryFragment extends Fragment {
                 QueryPreferences.setStoredQuery(getActivity(), query);
                 updateItems();
 
-                searchView.onActionViewCollapsed();
+                mSearchView.onActionViewCollapsed();
 
                 return true;
             }
@@ -125,11 +127,11 @@ public class PhotoGalleryFragment extends Fragment {
             }
         });
 
-        searchView.setOnSearchClickListener(new View.OnClickListener() {
+        mSearchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String query = QueryPreferences.getStoredQuery(getActivity());
-                searchView.setQuery(query, false);
+                mSearchView.setQuery(query, false);
             }
         });
 
@@ -142,6 +144,8 @@ public class PhotoGalleryFragment extends Fragment {
                 QueryPreferences.setStoredQuery(getActivity(), null);
 
                 updateItems();
+
+                mSearchView.onActionViewCollapsed();
 
                 return true;
             default:
