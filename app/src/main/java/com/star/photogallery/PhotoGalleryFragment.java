@@ -258,8 +258,6 @@ public class PhotoGalleryFragment extends Fragment {
         int firstVisibleItemPosition = mGridLayoutManager.findFirstVisibleItemPosition();
         int lastVisibleItemPosition = mGridLayoutManager.findLastVisibleItemPosition();
 
-        System.out.println("haha " + mGridLayoutManager.getItemCount());
-
         if (lastVisibleItemPosition == (mGridLayoutManager.getItemCount() - 1) &&
                 mCurrentPage == mFetchedPage ) {
             mCurrentPosition = firstVisibleItemPosition + 3;
