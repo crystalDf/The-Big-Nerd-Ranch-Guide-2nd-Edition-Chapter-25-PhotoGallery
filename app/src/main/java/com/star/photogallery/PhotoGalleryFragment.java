@@ -281,4 +281,5 @@ public class PhotoGalleryFragment extends Fragment {
             new FetchItemsTask(query).execute(mCurrentPage);
         }
     }
+
 }

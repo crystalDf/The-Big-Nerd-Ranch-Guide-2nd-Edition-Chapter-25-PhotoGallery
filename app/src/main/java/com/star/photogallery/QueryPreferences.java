@@ -19,4 +19,5 @@ public class QueryPreferences {
                 .putString(PREF_SEARCH_QUERY, query)
                 .apply();
     }
+
 }
