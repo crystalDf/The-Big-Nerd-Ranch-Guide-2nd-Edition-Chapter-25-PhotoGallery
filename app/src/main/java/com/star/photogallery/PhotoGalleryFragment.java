@@ -1,6 +1,7 @@
 package com.star.photogallery;
 
 
+import android.app.ProgressDialog;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+
 public class PhotoGalleryFragment extends Fragment {
 
     private static final String TAG = "PhotoGalleryFragment";
@@ -36,6 +38,8 @@ public class PhotoGalleryFragment extends Fragment {
     private List<GalleryItem> mGalleryItems;
 
     private SearchView mSearchView;
+
+    private ProgressDialog mProgressDialog;
 
     private int mCurrentPage;
     private int mFetchedPage;
@@ -243,6 +247,20 @@ public class PhotoGalleryFragment extends Fragment {
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            mProgressDialog = new ProgressDialog(getActivity());
+            mProgressDialog.setTitle("My Progress Dialog");
+            mProgressDialog.setMessage("My Progress Message");
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            mProgressDialog.setIndeterminate(true);
+            mProgressDialog.show();
+
+        }
+
+        @Override
         protected List<GalleryItem> doInBackground(Integer... params) {
 
             if (mQuery == null) {
@@ -264,6 +282,10 @@ public class PhotoGalleryFragment extends Fragment {
 
             mFetchedPage++;
             setupAdapter();
+
+            if (mProgressDialog != null) {
+                mProgressDialog.dismiss();
+            }
         }
     }
 
