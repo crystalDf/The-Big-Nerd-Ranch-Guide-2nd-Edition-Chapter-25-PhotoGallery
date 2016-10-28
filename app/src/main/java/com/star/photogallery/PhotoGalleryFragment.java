@@ -1,7 +1,6 @@
 package com.star.photogallery;
 
 
-import android.app.ProgressDialog;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.squareup.picasso.Picasso;
 
@@ -39,7 +39,7 @@ public class PhotoGalleryFragment extends Fragment {
 
     private SearchView mSearchView;
 
-    private ProgressDialog mProgressDialog;
+    private ProgressBar mProgressBar;
 
     private int mCurrentPage;
     private int mFetchedPage;
@@ -67,6 +67,8 @@ public class PhotoGalleryFragment extends Fragment {
         mPhotoRecyclerView = (RecyclerView)
                 view.findViewById(R.id.fragment_photo_gallery_recycler_view);
 
+        mProgressBar = (ProgressBar) view.findViewById(R.id.fragment_progress_bar);
+
         mGridLayoutManager = new GridLayoutManager(getActivity(), DEFAULT_COLUMN_NUM);
 
         mPhotoRecyclerView.setLayoutManager(mGridLayoutManager);
@@ -89,6 +91,12 @@ public class PhotoGalleryFragment extends Fragment {
                 updateCurrentPage();
             }
         });
+
+        if (savedInstanceState != null) {
+            showProgressBar(false);
+        } else {
+            showProgressBar(true);
+        }
 
         setupAdapter();
         
@@ -116,6 +124,9 @@ public class PhotoGalleryFragment extends Fragment {
                 Log.d(TAG, "QueryTextSubmit: " + query);
 
                 QueryPreferences.setStoredQuery(getActivity(), query);
+
+                showProgressBar(true);
+
                 updateItems();
 
                 mSearchView.onActionViewCollapsed();
@@ -146,6 +157,8 @@ public class PhotoGalleryFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.menu_item_clear:
                 QueryPreferences.setStoredQuery(getActivity(), null);
+
+                showProgressBar(true);
 
                 updateItems();
 
@@ -247,20 +260,6 @@ public class PhotoGalleryFragment extends Fragment {
         }
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            mProgressDialog = new ProgressDialog(getActivity());
-            mProgressDialog.setTitle("My Progress Dialog");
-            mProgressDialog.setMessage("My Progress Message");
-            mProgressDialog.setCancelable(false);
-            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            mProgressDialog.setIndeterminate(true);
-            mProgressDialog.show();
-
-        }
-
-        @Override
         protected List<GalleryItem> doInBackground(Integer... params) {
 
             if (mQuery == null) {
@@ -281,11 +280,11 @@ public class PhotoGalleryFragment extends Fragment {
             }
 
             mFetchedPage++;
+
+            showProgressBar(false);
+
             setupAdapter();
 
-            if (mProgressDialog != null) {
-                mProgressDialog.dismiss();
-            }
         }
     }
 
@@ -301,6 +300,14 @@ public class PhotoGalleryFragment extends Fragment {
             String query = QueryPreferences.getStoredQuery(getActivity());
 
             new FetchItemsTask(query).execute(mCurrentPage);
+        }
+    }
+
+    private void showProgressBar(boolean isShown) {
+        if (isShown) {
+            mProgressBar.setVisibility(View.VISIBLE);
+        } else {
+            mProgressBar.setVisibility(View.INVISIBLE);
         }
     }
 
